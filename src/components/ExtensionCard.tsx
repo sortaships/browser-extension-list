@@ -1,9 +1,11 @@
+import { useContext } from "react";
+import { Theme, ThemeContext } from "../contexts/ThemeContext";
+
 interface ExtensionCardProps {
   logo?: string;
   name: string;
   description: string;
   isActive?: boolean;
-  theme: string;
   handleRemoveClick: (name: string) => void;
   handleSliderClick: (name: string) => void;
 }
@@ -13,12 +15,12 @@ function ExtensionCard({
   logo,
   description,
   isActive,
-  theme,
   handleRemoveClick,
   handleSliderClick,
 }: ExtensionCardProps) {
+  const theme = useContext<Theme>(ThemeContext);
   return (
-    <div className={"card" + theme}>
+    <div className={"card card-" + theme}>
       <div className="card-icon">
         <img src={`${logo}`} />
       </div>

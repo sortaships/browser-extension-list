@@ -1,8 +1,10 @@
-interface AttributionProps {
-  theme: string;
-}
+import { useContext } from "react";
+import { ThemeContext } from "../contexts/ThemeContext";
 
-function Attribution({ theme }: AttributionProps) {
+interface AttributionProps {}
+
+function Attribution({}: AttributionProps) {
+  const theme = useContext(ThemeContext);
   return (
     <div className={"attribution attribution-" + theme}>
       Challenge by

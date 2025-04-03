@@ -1,9 +1,12 @@
+import { useContext } from "react";
+import { Theme, ThemeContext } from "../contexts/ThemeContext";
+
 interface HeaderBarProps {
   onIconClick: () => void;
-  theme: string;
 }
 
-function HeaderBar({ onIconClick, theme }: HeaderBarProps) {
+function HeaderBar({ onIconClick }: HeaderBarProps) {
+  const theme = useContext<Theme>(ThemeContext);
   const logoSrc =
     theme === "light"
       ? "./assets/images/logo.svg"

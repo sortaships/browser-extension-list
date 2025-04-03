@@ -3,6 +3,7 @@ import Attribution from "./components/Attribution";
 import HeaderBar from "./components/HeaderBar";
 import ExtensionCard from "./components/ExtensionCard";
 import TitleBar from "./components/TitleBar";
+import { Theme, ThemeEnum, ThemeContext } from "./contexts/ThemeContext";
 
 type ExtData = {
   name: string;
@@ -11,10 +12,17 @@ type ExtData = {
   isActive: boolean;
 };
 
+const darkBackgroundGradient =
+  "linear-gradient(180deg, #040918 0%, #091540 100%)";
+const lightBackgroundGradient =
+  "linear-gradient(180deg, #ebf2fc 0%, #eef8f9 100%)";
+
 function App() {
-  const [extensionData, setExtensionData] = useState([]);
-  const [filteredExtensionData, setFilteredExtensionData] = useState([]);
-  const [theme, setTheme] = useState("light");
+  const [extensionData, setExtensionData] = useState<ExtData[]>([]);
+  const [filteredExtensionData, setFilteredExtensionData] = useState<ExtData[]>(
+    []
+  );
+  const [theme, setTheme] = useState<Theme>(ThemeEnum.LIGHT);
 
   function handleCardRemoveClick(name: string): void {
     setExtensionData((prev) =>
@@ -54,12 +62,12 @@ function App() {
 
   function setBackground(theme: string): void {
     let bg;
-    if (theme === "light") {
-      bg = "linear-gradient(180deg, #040918 0%, #091540 100%)";
-      setTheme("dark");
+    if (theme === ThemeEnum.LIGHT) {
+      bg = darkBackgroundGradient;
+      setTheme(ThemeEnum.DARK);
     } else {
-      bg = "linear-gradient(180deg, #ebf2fc 0%, #eef8f9 100%)";
-      setTheme("light");
+      bg = lightBackgroundGradient;
+      setTheme(ThemeEnum.LIGHT);
     }
     document.body.style.backgroundImage = bg;
   }
@@ -76,27 +84,28 @@ function App() {
 
   return (
     <>
-      <HeaderBar onIconClick={() => setBackground(theme)} theme={theme} />
-      <TitleBar handleFilterClick={handleFilterClick} theme={theme} />
-      <div className="cardgrid">
-        {filteredExtensionData.length ? (
-          filteredExtensionData.map((extension: ExtData) => (
-            <ExtensionCard
-              name={extension.name}
-              description={extension.description}
-              logo={extension.logo}
-              key={extension.name}
-              isActive={extension.isActive}
-              theme={theme}
-              handleRemoveClick={handleCardRemoveClick}
-              handleSliderClick={handleCardSliderClick}
-            />
-          ))
-        ) : (
-          <h2>No results</h2>
-        )}
-      </div>
-      <Attribution theme={theme} />
+      <ThemeContext.Provider value={theme}>
+        <HeaderBar onIconClick={() => setBackground(theme)} />
+        <TitleBar handleFilterClick={handleFilterClick} theme={theme} />
+        <div className="cardgrid">
+          {filteredExtensionData.length ? (
+            filteredExtensionData.map((extension: ExtData) => (
+              <ExtensionCard
+                name={extension.name}
+                description={extension.description}
+                logo={extension.logo}
+                key={extension.name}
+                isActive={extension.isActive}
+                handleRemoveClick={handleCardRemoveClick}
+                handleSliderClick={handleCardSliderClick}
+              />
+            ))
+          ) : (
+            <h2>No results</h2>
+          )}
+        </div>
+        <Attribution />
+      </ThemeContext.Provider>
     </>
   );
 }
